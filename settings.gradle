@@ -1,0 +1,2 @@
+rootProject.name = "RestAPICallWithCaching"
+include ':app'
