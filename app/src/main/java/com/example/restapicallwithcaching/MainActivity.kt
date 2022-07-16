@@ -12,8 +12,6 @@ import com.example.restapicallwithcaching.data.repository.CharacterRepository
 import com.example.restapicallwithcaching.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
-
-
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,8 +21,8 @@ class MainActivity : AppCompatActivity() {
             this, Observer {
                 when (it.status) {
                     Resource.Status.SUCCESS -> {
-                        if (!it.data?.items.isNullOrEmpty()) {
-                            it.data?.items?.map { data ->
+                        if (!it.data.isNullOrEmpty()) {
+                            it.data.map { data ->
                                 Log.d("====REPO====", "${data.name}")
                             }
                         }

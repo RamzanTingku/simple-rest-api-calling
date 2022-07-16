@@ -1,12 +1,16 @@
 package com.example.restapicallwithcaching.data.repository
 
-import com.example.restapicallwithcaching.data.remote.CharacterRemoteDataSource
+import com.example.restapicallwithcaching.data.local.GithubLocalDataSource
+import com.example.restapicallwithcaching.data.remote.GithubRemoteDataSource
 import com.example.restapicallwithcaching.utils.performGetOperation
-import javax.inject.Inject
 
 class CharacterRepository  {
-    private val remoteDataSource = CharacterRemoteDataSource()
+    private val remoteDataSource = GithubRemoteDataSource()
+    private val localDataSource = GithubLocalDataSource()
+
     fun getRepos(query: String, sort: String, limit: Int) = performGetOperation(
-        networkCall = { remoteDataSource.getRepos(query, sort, limit) }
+        databaseQuery = { localDataSource.getAllRepos() },
+        networkCall = { remoteDataSource.getRepos(query, sort, limit) },
+        saveCallResult = { localDataSource.insertAllRepo(it.items) }
     )
 }

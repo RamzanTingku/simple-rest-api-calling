@@ -1,9 +1,9 @@
-
+package com.example.restapicallwithcaching.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.restapicallwithcaching.data.model.RepoOwner
 
-@Entity(tableName = "repos")
+@Entity(tableName = "repoItems")
 data class RepoItem(
     @PrimaryKey
     val id: Int?,
