@@ -38,7 +38,7 @@ class RepoListFragment : Fragment() , MenuProvider {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fetchData()
+        getSortData()
         setupRecyclerView()
         setupObservers()
     }
