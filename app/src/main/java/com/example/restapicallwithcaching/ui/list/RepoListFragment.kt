@@ -1,7 +1,6 @@
 package com.example.restapicallwithcaching.ui.list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.core.view.MenuHost
@@ -23,6 +22,7 @@ class RepoListFragment : Fragment() , MenuProvider {
     private lateinit var binding: FragmentListBinding
     private val viewModel: RepoListViewModel by viewModels()
     private lateinit var adapter: RepoListAdapter
+    private var sort: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,12 +38,16 @@ class RepoListFragment : Fragment() , MenuProvider {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fetchData()
         setupRecyclerView()
         setupObservers()
     }
 
+    private fun getSortData() {
+        sort = AppSharedPref.getStringData(SharedPrefConst.CURRENT_SORT)
+    }
+
     private fun setupObservers() {
-        updateView()
         viewModel.repos.observe(viewLifecycleOwner, Observer {
             when (it.status) {
                 Resource.Status.SUCCESS -> {
@@ -59,8 +63,8 @@ class RepoListFragment : Fragment() , MenuProvider {
         })
     }
 
-    private fun updateView() {
-        val sort = AppSharedPref.getStringData(SharedPrefConst.CURRENT_SORT)
+    private fun fetchData() {
+        getSortData()
         sort?.let { viewModel.getRepos(it) }
     }
 
@@ -73,10 +77,18 @@ class RepoListFragment : Fragment() , MenuProvider {
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.sort_menu, menu)
+        if(sort == SharedPrefConst.SORT_STARS){
+            menu.findItem(R.id.menu_stars).isChecked = true
+        }else{
+            menu.findItem(R.id.menu_updates).isChecked = true
+        }
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
+            R.id.menu_title -> {
+                return false
+            }
             R.id.menu_stars -> {
                 menuItem.isChecked = !menuItem.isChecked
                 if(menuItem.isChecked) saveSort(SharedPrefConst.SORT_STARS)
@@ -86,7 +98,7 @@ class RepoListFragment : Fragment() , MenuProvider {
                 if(menuItem.isChecked) saveSort(SharedPrefConst.SORT_UPDATES)
             }
         }
-        updateView()
+        fetchData()
         return true
     }
 
