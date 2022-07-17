@@ -12,14 +12,13 @@ class CharacterRepository  {
 
     fun getRepos(query: String, sort: String, limit: Int) = performGetOperation(
         databaseQuery = {
-            val sort = AppSharedPref.getStringData(SharedPrefConst.CURRENT_SORT)
             if(sort == SharedPrefConst.SORT_STARS){
                 localDataSource.getAllReposByStars()
             }else{
                 localDataSource.getAllReposByUpdates()
             }
         },
-        networkCall = { remoteDataSource.getRepos(query, sort, limit) },
+        networkCall = { remoteDataSource.getRepos(query, limit) },
         saveCallResult = {
             localDataSource.deleteAllItems()
             localDataSource.insertAllRepo(it.items)

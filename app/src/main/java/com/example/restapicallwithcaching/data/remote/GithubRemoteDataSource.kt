@@ -8,9 +8,9 @@ import retrofit2.Response
 
 class GithubRemoteDataSource : BaseDataSource() {
     private val characterService = ApiClient.retrofit().create(GithubApiService::class.java)
-    suspend fun getRepos(query: String, sort: String, limit: Int): Resource<GithubRepoResponse> {
+    suspend fun getRepos(query: String, limit: Int): Resource<GithubRepoResponse> {
         return getResult {
-            var result = characterService.getRepos(query, sort, limit)
+            var result = characterService.getRepos(query, limit)
             if (result.isSuccessful && !result.body()?.items.isNullOrEmpty()) {
                 result = insertUpdatedTimeStamp(result)
             }

@@ -14,7 +14,7 @@ class RepoListViewModel: ViewModel() {
     private val _sort = MutableLiveData<String>()
 
     private val _repos = _sort.switchMap { _sort ->
-        repository.getRepos("Android", _sort, 2)
+        repository.getRepos("Android", _sort, 20)
     }
     val repos: LiveData<Resource<List<RepoItem>>> = _repos
 
