@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RestAPICallWithCaching</string>
+    <string name="app_name">Github Repo</string>
     <string name="sorting_options">Sorting Options</string>
     <string name="stars">Stars</string>
     <string name="updates">Updated At</string>

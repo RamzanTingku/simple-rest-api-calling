@@ -12,9 +12,7 @@
         tools:layout="@layout/fragment_list" >
         <action
             android:id="@+id/action_listFragment_to_ownerFragment2"
-            app:destination="@id/ownerFragment"
-            app:popUpTo="@id/ownerFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/ownerFragment"/>
     </fragment>
 
     <fragment
