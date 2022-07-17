@@ -1,4 +1,5 @@
 package com.example.restapicallwithcaching.data.remote
+import com.example.restapicallwithcaching.utils.const.UrlConst
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -6,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 object ApiClient {
-    private var baseGitHubUrl = "https://api.github.com/"
+    private var baseGitHubUrl = UrlConst.github_base_url
 
     private var retrofit: Retrofit? = null
 
