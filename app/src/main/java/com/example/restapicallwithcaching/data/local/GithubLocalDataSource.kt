@@ -13,11 +13,23 @@ class GithubLocalDataSource: GithubRepoDao {
         return githubRepoDao.getAllRepos()
     }
 
+    override fun getAllReposByStars(): LiveData<List<RepoItem>> {
+        return githubRepoDao.getAllReposByStars()
+    }
+
+    override fun getAllReposByUpdates(): LiveData<List<RepoItem>> {
+        return githubRepoDao.getAllReposByUpdates()
+    }
+
     override suspend fun insertAllRepo(repos: List<RepoItem>) {
         return githubRepoDao.insertAllRepo(repos)
     }
 
     override suspend fun insertRepo(repoItem: RepoItem) {
         return githubRepoDao.insertRepo(repoItem)
+    }
+
+    override fun deleteAllItems() {
+        return githubRepoDao.deleteAllItems()
     }
 }

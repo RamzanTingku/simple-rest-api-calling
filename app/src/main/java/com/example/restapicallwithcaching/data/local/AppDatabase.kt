@@ -9,7 +9,7 @@ import androidx.room.TypeConverters
 import com.example.restapicallwithcaching.data.model.OwnerTypeConverter
 
 
-@Database(entities = [RepoItem::class], version = 1, exportSchema = false)
+@Database(entities = [RepoItem::class], version = 2, exportSchema = false)
 @TypeConverters(OwnerTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
