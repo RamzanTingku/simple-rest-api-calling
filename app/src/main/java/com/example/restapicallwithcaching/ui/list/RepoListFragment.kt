@@ -9,12 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.restapicallwithcaching.R
 import com.example.restapicallwithcaching.data.shared_pref.AppSharedPref
 import com.example.restapicallwithcaching.databinding.FragmentListBinding
 import com.example.restapicallwithcaching.utils.Resource
 import com.example.restapicallwithcaching.utils.const.SharedPrefConst
+import kotlinx.coroutines.launch
 
 
 class RepoListFragment : Fragment() , MenuProvider {
@@ -48,24 +50,27 @@ class RepoListFragment : Fragment() , MenuProvider {
     }
 
     private fun setupObservers() {
-        viewModel.repos.observe(viewLifecycleOwner, Observer {
-            when (it.status) {
-                Resource.Status.SUCCESS -> {
-                    binding.progressBar.visibility = View.GONE
-                    if (!it.data.isNullOrEmpty()) adapter.setItems(ArrayList(it.data))
+        lifecycleScope.launch {
+            viewModel.stateFlow.collect { resource ->
+                when (resource.status) {
+                    Resource.Status.SUCCESS -> {
+                        binding.progressBar.visibility = View.GONE
+                        if (!resource.data.isNullOrEmpty()) adapter.setItems(ArrayList(resource.data))
+                    }
+                    Resource.Status.LOADING -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                    Resource.Status.ERROR -> {
+                        Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
-                Resource.Status.ERROR ->
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-
-                Resource.Status.LOADING ->
-                    binding.progressBar.visibility = View.VISIBLE
             }
-        })
+        }
     }
 
     private fun fetchData() {
         getSortData()
-        sort?.let { viewModel.getRepos(it) }
+        viewModel.refresh()
     }
 
     private fun setupRecyclerView() {

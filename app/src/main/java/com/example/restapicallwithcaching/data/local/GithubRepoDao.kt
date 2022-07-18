@@ -7,13 +7,13 @@ import com.example.restapicallwithcaching.data.model.RepoItem
 @Dao
 interface GithubRepoDao {
     @Query("SELECT * FROM repoItems")
-    fun getAllRepos() : LiveData<List<RepoItem>>
+    suspend fun getAllRepos() : List<RepoItem>
 
     @Query("SELECT * FROM repoItems ORDER BY stargazers_count DESC")
-    fun getAllReposByStars() : LiveData<List<RepoItem>>
+    suspend fun getAllReposByStars() : List<RepoItem>
 
     @Query("SELECT * FROM repoItems ORDER BY updatedAtTimeStamp DESC")
-    fun getAllReposByUpdates() : LiveData<List<RepoItem>>
+    suspend fun getAllReposByUpdates() : List<RepoItem>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllRepo(repos: List<RepoItem>)

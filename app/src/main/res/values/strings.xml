@@ -4,4 +4,6 @@
     <string name="stars">Stars</string>
     <string name="updates">Updated At</string>
     <string name="updated_at">"Last updated at: </string>
+    <string name="failed_loading_msg">Loading failed</string>
+    <string name="failed_network_msg">Network error</string>
 </resources>
