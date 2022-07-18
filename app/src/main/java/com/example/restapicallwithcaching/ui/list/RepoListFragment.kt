@@ -61,6 +61,7 @@ class RepoListFragment : Fragment() , MenuProvider {
                         binding.progressBar.visibility = View.VISIBLE
                     }
                     Resource.Status.ERROR -> {
+                        binding.progressBar.visibility = View.GONE
                         Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
                     }
                 }

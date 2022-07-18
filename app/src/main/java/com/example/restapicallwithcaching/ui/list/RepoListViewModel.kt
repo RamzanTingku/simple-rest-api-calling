@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class RepoListViewModel: ViewModel() {
+    private val query: String = "Android"
+    private val limit: Int = 50
     private val repository = RepoRepository()
     private val _stateFlow = MutableStateFlow<Resource<List<RepoItem>>>(Resource.loading())
     val stateFlow: StateFlow<Resource<List<RepoItem>>>
@@ -21,9 +23,9 @@ class RepoListViewModel: ViewModel() {
     }
 
     fun refresh() {
-        val sort = AppSharedPref.getStringData(SharedPrefConst.CURRENT_SORT) ?: "stars"
+        val sort = AppSharedPref.getStringData(SharedPrefConst.CURRENT_SORT) ?: SharedPrefConst.SORT_STARS
         viewModelScope.launch {
-            repository.result("Android", sort, 4).collect {
+            repository.result(query, sort, limit).collect {
                 _stateFlow.tryEmit(it)
             }
         }
