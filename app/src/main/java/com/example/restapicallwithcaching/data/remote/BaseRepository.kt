@@ -14,23 +14,23 @@ abstract class BaseRepository<T>() {
     private val context = MainApplication.instance
     private val dispatcher = Dispatchers.IO
 
-    protected abstract suspend fun query(): List<T>
+    protected abstract suspend fun fetchFromDB(query: String, sort: String): List<T>
 
-    protected abstract suspend fun fetch(query: String, sort: String, limit: Int): List<T>
+    protected abstract suspend fun fetchFromApi(query: String, limit: Int): List<T>
 
     protected abstract suspend fun saveFetchResult(items: List<T>)
 
     fun result(query: String, sort: String, limit: Int): Flow<Resource<List<T>>> = flow {
         emit(Resource.loading())
-        val cache = query()
+        val cache = fetchFromDB(query, sort)
         if (cache.isNotEmpty()) {
             // ****** STEP 1: VIEW CACHE ******
             emit(Resource.success(cache))
             try {
                 // ****** STEP 2: MAKE NETWORK CALL, SAVE RESULT TO CACHE ******
-                refresh(query, sort, limit)
+                refresh(query, limit)
                 // ****** STEP 3: VIEW CACHE ******
-                emit(Resource.success(query()))
+                emit(Resource.success(fetchFromDB(query, sort)))
             }catch (t: Throwable) {
                 print(t.message)
             }
@@ -38,9 +38,9 @@ abstract class BaseRepository<T>() {
             if (isNetworkAvailable(context)) {
                 try {
                     // ****** STEP 1: MAKE NETWORK CALL, SAVE RESULT TO CACHE ******
-                    refresh(query, sort, limit)
+                    refresh(query, limit)
                     // ****** STEP 2: VIEW CACHE ******
-                    emit(Resource.success(query()))
+                    emit(Resource.success(fetchFromDB(query, sort)))
                 } catch (t: Throwable) {
                     emit(Resource.error(context.getString(R.string.failed_loading_msg)))
                 }
@@ -50,7 +50,7 @@ abstract class BaseRepository<T>() {
         }
     }.flowOn(dispatcher)
 
-    private suspend fun refresh(query: String, sort: String, limit: Int) {
-        saveFetchResult(fetch(query, sort, limit))
+    private suspend fun refresh(query: String, limit: Int) {
+        saveFetchResult(fetchFromApi(query, limit))
     }
 }

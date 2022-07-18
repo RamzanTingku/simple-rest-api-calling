@@ -12,4 +12,10 @@ interface GithubApiService {
         @Query("sort") sort: String,
         @Query("per_page") limit: Int
     ): Response<GithubRepoResponse>
+
+    @GET("search/repositories")
+    suspend fun getRepos(
+        @Query("q") query: String,
+        @Query("per_page") limit: Int
+    ): Response<GithubRepoResponse>
 }

@@ -23,7 +23,7 @@ class RepoListViewModel: ViewModel() {
     fun refresh() {
         val sort = AppSharedPref.getStringData(SharedPrefConst.CURRENT_SORT) ?: "stars"
         viewModelScope.launch {
-            repository.result("Android", sort, 10).collect {
+            repository.result("Android", sort, 4).collect {
                 _stateFlow.tryEmit(it)
             }
         }

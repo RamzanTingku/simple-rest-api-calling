@@ -17,18 +17,18 @@ class RepoRepository: BaseRepository<RepoItem>() {
     private val dao = AppDatabase.getDatabase(context).githubRepoDao()
     private val api = ApiClient.retrofit().create(GithubApiService::class.java)
 
-    override suspend fun query(): List<RepoItem> {
-        val sort = AppSharedPref.getStringData(SharedPrefConst.CURRENT_SORT)
-       return if(sort == SharedPrefConst.SORT_STARS){
-           dao.getAllReposByStars()
+    override suspend fun fetchFromDB(query: String, sort: String): List<RepoItem> {
+        return if(sort == SharedPrefConst.SORT_STARS){
+            dao.getAllReposByStars()
         }else dao.getAllReposByUpdates()
     }
 
-    override suspend fun fetch(query: String, sort: String, limit: Int): List<RepoItem> {
-        return  api.getReposWithSort(query, sort, limit).body()?.items?.insertUpdatedTimeStamp() ?: emptyList()
+    override suspend fun fetchFromApi(query: String, limit: Int): List<RepoItem> {
+        return  api.getRepos(query, limit).body()?.items?.insertUpdatedTimeStamp() ?: emptyList()
     }
 
     override suspend fun saveFetchResult(items: List<RepoItem>) {
+        dao.deleteAllItems()
         dao.insertAllRepo(items)
     }
 
